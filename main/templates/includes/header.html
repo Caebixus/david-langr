@@ -1,0 +1,28 @@
+{% load i18n static wagtailuserbar wagtailcore_tags wagtailimages_tags %}
+
+<!-- ======= Header ======= -->
+<header id="header">
+<div class="d-flex flex-column">
+
+  <div class="profile">
+<!--    {% image my_settings.dark_logo original as logo %}-->
+<!--    <img src="{{ logo.url }}" alt="" class="img-fluid rounded-circle">-->
+    <br>
+    <h1 class="text-light"><a href="/">{{ my_settings.full_name }}</a></h1>
+    <div class="social-links mt-3 text-center">
+      {% if my_settings.twitter %}<a href="{{ my_settings.twitter }}" class="twitter"><i class="bx bxl-twitter"></i></a>{% endif %}
+      {% if my_settings.linkedin %}<a href="{{ my_settings.linkedin }}" class="linkedin"><i class="bx bxl-linkedin"></i></a>{% endif %}
+    </div>
+  </div>
+
+  <nav id="navbar" class="nav-menu navbar">
+    <ul>
+      <li><a href="#hero" class="nav-link scrollto active"><i class="bx bx-home"></i> <span>Úvod</span></a></li>
+      <li><a href="#about" class="nav-link scrollto"><i class="bx bx-user"></i> <span>O mně</span></a></li>
+      <li><a href="#portfolio" class="nav-link scrollto"><i class="bx bx-book-content"></i> <span>Portfolio</span></a></li>
+      <li><a href="#services" class="nav-link scrollto"><i class="bx bx-server"></i> <span>Služby</span></a></li>
+      <li><a href="#contact" class="nav-link scrollto"><i class="bx bx-envelope"></i> <span>Kontakt</span></a></li>
+    </ul>
+  </nav><!-- .nav-menu -->
+</div>
+</header><!-- End Header -->
