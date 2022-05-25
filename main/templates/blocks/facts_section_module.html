@@ -1,0 +1,27 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+
+<section id="facts" class="facts">
+  <div class="container">
+
+    <div class="section-title">
+      <h2>{{ value.heading }}</h2>
+      <p>{{ value.sub_heading }}</p>
+    </div>
+
+    <div class="row no-gutters">
+
+      {% for item in value.facts_list %}
+      <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch" data-aos="fade-up">
+        <div class="count-box">
+          <i class="bi bi-emoji-smile"></i>
+          <span data-purecounter-start="0" data-purecounter-end="{{ item.number }}" data-purecounter-duration="1" class="purecounter"></span>
+          <p><strong>{{ item.objects_name }}</strong> {{ item.objects_text }}</p>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</section>

@@ -42,6 +42,82 @@ class AboutSection(blocks.StructBlock):
         icon = "list-ul"
 
 
+class FactsSection(blocks.StructBlock):
+    heading = blocks.CharBlock(label=_("Nadpis"), max_length=60, required=False)
+    sub_heading = blocks.CharBlock(label=_("Podnadpis"), max_length=256, required=False)
+
+    facts_list = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("number", blocks.CharBlock(label="Počet objektů", max_length=10, required=False)),
+                ("objects_name", blocks.CharBlock(label="Název objektů", max_length=20, required=False)),
+                ("objects_text", blocks.CharBlock(label="Zbytek textace", max_length=40, required=False)),
+            ],
+            max_num=4,
+        ),
+    )
+
+    class Meta:
+        template = "blocks/facts_section_module.html"
+        label = "Sekce Fakta"
+        icon = "list-ul"
+
+
+class SkillsSection(blocks.StructBlock):
+    heading = blocks.CharBlock(label=_("Nadpis"), max_length=60, required=False)
+    sub_heading = blocks.CharBlock(label=_("Podnadpis"), max_length=256, required=False)
+
+    skills_list_left = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("skill_name", blocks.CharBlock(label="Název dovednosti", max_length=60, required=False)),
+                ("skill_value", blocks.CharBlock(label="Textová hodnota dovednosti", max_length=60, required=False)),
+                ("number_progress_bar", blocks.CharBlock(label="Číselná hodnota progress baru", max_length=60, required=False)),
+            ],
+        ),
+    )
+
+    skills_list_right = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("skill_name", blocks.CharBlock(label="Název dovednosti", max_length=60, required=False)),
+                ("skill_value", blocks.CharBlock(label="Textová hodnota dovednosti", max_length=60, required=False)),
+                ("number_progress_bar", blocks.CharBlock(label="Číselná hodnota progress baru", max_length=60, required=False)),
+            ],
+        ),
+    )
+
+    class Meta:
+        template = "blocks/skills_section_module.html"
+        label = "Sekce dovedností"
+        icon = "list-ul"
+
+
+class PortfolioSection(blocks.StructBlock):
+    heading = blocks.CharBlock(label=_("Nadpis"), max_length=60, required=False)
+    sub_heading = blocks.CharBlock(label=_("Podnadpis"), max_length=256, required=False)
+
+    portfolio_list = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("image", ImageChooserBlock(label=_("Obrázek webu, nebo klientovy výpomoci"), required=False)),
+                ("portfolio_name", blocks.CharBlock(label="Název klienta či webu", max_length=40, required=False)),
+                ("portfolio_url", blocks.URLBlock(label="URL klienta či webu", max_length=80, required=False)),
+                ("portfolio_tag", blocks.ChoiceBlock(choices=[
+                    ('web', 'Webová stránka'),
+                    ('mkt', 'Online Marketing'),
+                    ('bth', 'Marketing + Web'),
+                ], icon='cup', required=False)),
+            ],
+        ),
+    )
+
+    class Meta:
+        template = "blocks/portfolio_section_module.html"
+        label = "Sekce Portfolio"
+        icon = "list-ul"
+
+
 class HomePage(Page):
     template = 'pages/index.html'
     max_count = 1
@@ -53,6 +129,9 @@ class HomePage(Page):
     content = StreamField([
         ('first_section', FirstSection()),
         ('about_section', AboutSection()),
+        ('facts_section', FactsSection()),
+        ('skills_section', SkillsSection()),
+        ('portfolio_section', PortfolioSection()),
     ], blank=True, null=True)
 
     content_panels = [

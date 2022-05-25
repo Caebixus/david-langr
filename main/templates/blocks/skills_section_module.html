@@ -1,0 +1,43 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+<section id="skills" class="skills section-bg">
+  <div class="container">
+
+    <div class="section-title">
+      <h2>{{ value.heading }}</h2>
+      <p>{{ value.sub_heading }}</p>
+    </div>
+
+    <div class="row skills-content">
+
+      <div class="col-lg-6" data-aos="fade-up">
+
+        {% for item in value.skills_list_left %}
+        <div class="progress">
+          <span class="skill">{{ item.skill_name }} <i class="val">{{ item.skill_value }}</i></span>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{ item.number_progress_bar }}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+        {% endfor %}
+
+      </div>
+
+      <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+
+      {% for item in value.skills_list_right %}
+        <div class="progress">
+          <span class="skill">{{ item.skill_name }} <i class="val">{{ item.skill_value }}</i></span>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar" role="progressbar" aria-valuenow="{{ item.number_progress_bar }}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+        {% endfor %}
+
+
+      </div>
+
+    </div>
+
+  </div>
+</section>
