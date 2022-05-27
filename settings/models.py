@@ -11,12 +11,14 @@ class MySettings(BaseSetting):
     street = models.CharField("Ulice", max_length=128, blank=True, null=True)
     city = models.CharField("Město", max_length=128, blank=True, null=True)
     zip = models.CharField("PSČ", max_length=32, blank=True, null=True)
+    ico = models.CharField("IČO", max_length=32, blank=True, null=True)
     basic_panels = [
         FieldPanel("full_name"),
         FieldPanel("email"),
         FieldPanel("street"),
         FieldPanel("city"),
         FieldPanel("zip"),
+        FieldPanel("ico"),
     ]
 
     logo = models.ForeignKey("wagtailimages.Image", on_delete=models.PROTECT, null=True, blank=True, related_name="+")

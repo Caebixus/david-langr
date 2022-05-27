@@ -118,6 +118,35 @@ class PortfolioSection(blocks.StructBlock):
         icon = "list-ul"
 
 
+class ServicesSection(blocks.StructBlock):
+    heading = blocks.CharBlock(label=_("Nadpis"), max_length=60, required=False)
+    sub_heading = blocks.CharBlock(label=_("Podnadpis"), max_length=256, required=False)
+
+    services_list = blocks.ListBlock(
+        blocks.StructBlock(
+            [
+                ("services_name", blocks.CharBlock(label="Typ služby", max_length=40, required=False)),
+                ("services_text", blocks.TextBlock(label="Textace", max_length=200, required=False)),
+            ],
+        ),
+    )
+
+    class Meta:
+        template = "blocks/services_section_module.html"
+        label = "Sekce služby"
+        icon = "list-ul"
+
+
+class ContactSection(blocks.StructBlock):
+    heading = blocks.CharBlock(label=_("Nadpis"), max_length=60, required=False)
+    sub_heading = blocks.CharBlock(label=_("Podnadpis"), max_length=256, required=False)
+
+    class Meta:
+        template = "blocks/contact_section_module.html"
+        label = "Sekce kontakt"
+        icon = "list-ul"
+
+
 class HomePage(Page):
     template = 'pages/index.html'
     max_count = 1
@@ -132,6 +161,8 @@ class HomePage(Page):
         ('facts_section', FactsSection()),
         ('skills_section', SkillsSection()),
         ('portfolio_section', PortfolioSection()),
+        ('services_section', ServicesSection()),
+        ('contact_section', ContactSection()),
     ], blank=True, null=True)
 
     content_panels = [
