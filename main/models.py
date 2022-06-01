@@ -1,13 +1,20 @@
+from django.contrib import messages
 from django.db import models
+from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.template.response import TemplateResponse
 
 from django.utils.translation import gettext_lazy as _
+from modelcluster.fields import ParentalKey
+from wagtail.contrib.forms.models import AbstractFormField, AbstractEmailForm
+from wagtail.contrib.forms.panels import FormSubmissionsPanel
 from wagtail.core import blocks
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.edit_handlers import ImageChooserPanel
 from wagtail.images.models import Image
 from wagtail.models import Page
-from wagtail.fields import StreamField
-from wagtail.admin.panels import FieldPanel, TabbedInterface, ObjectList, StreamFieldPanel
+from wagtail.fields import StreamField, RichTextField
+from wagtail.admin.panels import FieldPanel, TabbedInterface, ObjectList, StreamFieldPanel, InlinePanel, MultiFieldPanel, FieldRowPanel
 
 
 class FirstSection(blocks.StructBlock):
@@ -186,3 +193,54 @@ class HomePage(Page):
     class Meta:
         verbose_name = "Index stránka"
         verbose_name_plural = "Index stránky"
+
+
+class FormField(AbstractFormField):
+    page = ParentalKey(
+        'ContactBlock',
+        on_delete=models.CASCADE,
+        related_name='form_fields',
+    )
+
+
+class ContactBlock(AbstractEmailForm):
+    template = "pages/contact_page.html"
+
+    intro = RichTextField(blank=True, verbose_name="Úvodní text")
+    thank_you_text = RichTextField(blank=True, verbose_name="Text pro děkovací stránku")
+
+    content_panels = AbstractEmailForm.content_panels + [
+        FieldPanel("intro", classname="full"),
+        InlinePanel("form_fields", label="Pole formuláře"),
+        FieldPanel("thank_you_text", classname="full"),
+        MultiFieldPanel(
+            [
+                FieldRowPanel(
+                    [
+                        FieldPanel("from_address", classname="col6"),
+                        FieldPanel("to_address", classname="col6"),
+                    ]
+                ),
+                FieldPanel("subject"),
+            ],
+            "Nastavení emailů",
+        ),
+    ]
+
+    def send_mail(self, form):
+        pass
+
+    def serve(self, request, *args, **kwargs):
+        if request.method == "POST":
+            form = self.get_form(
+                request.POST, request.FILES, page=self, user=request.user
+            )
+
+            if form.is_valid():
+                return JsonResponse({'success': True, 'message': _("Děkujeme za zprávu.")})
+        else:
+            form = self.get_form(page=self, user=request.user)
+
+        context = self.get_context(request)
+        context["form"] = form
+        return TemplateResponse(request, self.get_template(request), context)

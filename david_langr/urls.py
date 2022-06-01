@@ -8,7 +8,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('mojeadministrace/', include(wagtailadmin_urls)),
+    path('cms/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
     path('', include(wagtail_urls)),
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'wagtail.images',
     'wagtail.search',
     'wagtail.admin',
+    'wagtail.locales',
     'wagtail',
     'wagtail.contrib.settings',
 
@@ -58,6 +59,7 @@ INSTALLED_APPS = [
 
     'main',
     'settings',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -69,6 +71,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'david_langr.urls'
@@ -85,6 +88,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'settings.context_processors.template_settings',
+                'settings.context_processors.form_modal',
             ],
         },
     },
@@ -98,11 +102,11 @@ WSGI_APPLICATION = 'david_langr.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'david_langr',
         'USER': 'david',
         'PASSWORD': 'necumkurva',
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
     }
 }
@@ -130,14 +134,19 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'cs'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'Europe/Prague'
 
 USE_I18N = True
 WAGTAIL_I18N_ENABLED = True
-
+USE_L10N = True
 USE_TZ = True
+
+WAGTAIL_CONTENT_LANGUAGES = LANGUAGES = [
+    ('cs', "Czech"),
+    ('en', "English"),
+]
 
 
 # Static files (CSS, JavaScript, Images)
@@ -159,3 +168,5 @@ WAGTAIL_SITE_NAME = 'Davidova Stránka'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

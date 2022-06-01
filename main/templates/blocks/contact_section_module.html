@@ -1,5 +1,5 @@
-{% load wagtailcore_tags wagtailimages_tags %}
-
+{% load wagtailcore_tags wagtailimages_tags crispy_forms_tags %}
+<script src="https://code.jquery.com/jquery-1.8.3.js"></script>
 
 <section id="contact" class="contact">
   <div class="container">
@@ -7,7 +7,13 @@
     <div class="section-title">
       <h2>{{ value.heading }}</h2>
       <p>{{ value.sub_heading }}</p>
-    </div>
+
+
+      <div id="alert-success-ajax" class="alert alert-success alert-dismissible fade show" role="alert" style="display:none;">
+        <strong>Zpráva v pořádku odeslána! Ozvu se.</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+
 
     <div class="row" data-aos="fade-in">
 
@@ -43,35 +49,51 @@
       </div>
 
       <div class="col-lg-7 mt-5 mt-lg-0 d-flex align-items-stretch">
-        <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+        <form id="contact-block-form" method="POST">
+           {% for field in form_modal %}
+              <div class="fieldWrapper">
+                  {{ field.errors }}
+              </div>
+          {% endfor %}
+          {% csrf_token %}
+          <input type="hidden" value="{{ page.url }}" name="next">
+          {{ form_modal.non_field_errors }}
+          {{ form_modal.source.errors }}
+          {{ form_modal.source }}
+          {{ form_modal|crispy }}
           <div class="row">
-            <div class="form-group col-md-6">
-              <label for="name">Your Name</label>
-              <input type="text" name="name" class="form-control" id="name" required>
-            </div>
-            <div class="form-group col-md-6">
-              <label for="name">Your Email</label>
-              <input type="email" class="form-control" name="email" id="email" required>
+            <div class="text-center py-3">
+              <button class="btn btn-outline-primary" id="jsSubmit" type="submit">
+                Odeslat
+              </button>
             </div>
           </div>
-          <div class="form-group">
-            <label for="name">Subject</label>
-            <input type="text" class="form-control" name="subject" id="subject" required>
-          </div>
-          <div class="form-group">
-            <label for="name">Message</label>
-            <textarea class="form-control" name="message" rows="10" required></textarea>
-          </div>
-          <div class="my-3">
-            <div class="loading">Loading</div>
-            <div class="error-message"></div>
-            <div class="sent-message">Your message has been sent. Thank you!</div>
-          </div>
-          <div class="text-center"><button type="submit">Send Message</button></div>
         </form>
       </div>
-
     </div>
-
   </div>
 </section>
+
+
+<script>
+$('#contact-block-form').on('submit', function (e) {
+  e.preventDefault();
+  var formData = $('#contact-block-form').serialize();
+    const xhr = $.ajax({
+        type: 'POST',
+        url: {% pageurl contact_block %},
+        data: $('#contact-block-form').serialize(),
+        dataType : 'json',
+        headers:{
+          "X-CSRFToken": '{{ csrf_token }}'
+        },
+    });
+    xhr.done(function() {
+        $('#contact-block-form')[0].reset();
+        $('#alert-success-ajax').show();
+        $('#alert-success-ajax').delay(5000).fadeOut('slow');
+    })
+    xhr.fail(function() { alert("Něco se pokazilo, obnovte stránku a zkuste znovu."); })
+    }
+)
+</script>
