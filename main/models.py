@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.db import models
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect
 from django.template.response import TemplateResponse
 
@@ -237,7 +237,8 @@ class ContactBlock(AbstractEmailForm):
             )
 
             if form.is_valid():
-                return JsonResponse({'success': True, 'message': _("Děkujeme za zprávu.")})
+                self.process_form_submission(form)
+                return HttpResponse('')
         else:
             form = self.get_form(page=self, user=request.user)
 
