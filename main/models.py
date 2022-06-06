@@ -156,7 +156,6 @@ class ContactSection(blocks.StructBlock):
 
 class HomePage(Page):
     template = 'pages/index.html'
-    max_count = 1
     parent_page_types = ['wagtailcore.Page']
 
     search_keywords = models.CharField(_('SEO keywords'), max_length=512, blank=True, null=True)
