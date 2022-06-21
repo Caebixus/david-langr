@@ -157,6 +157,7 @@ class ContactSection(blocks.StructBlock):
 class HomePage(Page):
     template = 'pages/index.html'
     parent_page_types = ['wagtailcore.Page']
+    max_count = 2
 
     search_keywords = models.CharField(_('SEO keywords'), max_length=512, blank=True, null=True)
     bg_image = models.ForeignKey(Image, on_delete=models.SET_NULL, related_name="+", null=True, blank=True, verbose_name="Úvodní obrázek jako pozadí")
@@ -204,6 +205,9 @@ class FormField(AbstractFormField):
 
 class ContactBlock(AbstractEmailForm):
     template = "pages/contact_page.html"
+    max_count = 2
+    parent_page_types = ['Homepage']
+    subpage_types = []
 
     intro = RichTextField(blank=True, verbose_name="Úvodní text")
     thank_you_text = RichTextField(blank=True, verbose_name="Text pro děkovací stránku")
@@ -244,3 +248,68 @@ class ContactBlock(AbstractEmailForm):
         context = self.get_context(request)
         context["form"] = form
         return TemplateResponse(request, self.get_template(request), context)
+
+
+class BlogListingPage(Page):
+    template = "pages/blog_list.html"
+    max_count = 2
+    parent_page_types = ['Homepage']
+
+    custom_title = models.CharField(max_length=100, blank=False, null=False)
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+
+        context["blog_list"] = BlogDetailPage.objects.live().public().order_by('first_published_at')
+        return context
+
+    content_panels = [
+    ]
+
+    page_settings = Page.content_panels + [
+        FieldPanel('custom_title'),
+    ]
+
+    promote_panels = Page.promote_panels + [
+    ]
+
+    edit_handler = TabbedInterface([
+        ObjectList(page_settings, heading='Nastavení stránky'),
+        ObjectList(content_panels, heading='Obsah'),
+        ObjectList(promote_panels, heading='Propagovat'),
+    ])
+
+    class Meta:
+        verbose_name = "Stránka blogu"
+        verbose_name_plural = "Stránky blogu"
+
+
+class BlogDetailPage(Page):
+    template = "pages/blog_detail.html"
+    subpage_types = []
+
+    custom_title = models.CharField(max_length=100, blank=False, null=False)
+    image = models.ForeignKey(Image, on_delete=models.SET_NULL, related_name="+", null=True, blank=True, verbose_name="Obrázek článku")
+    text = RichTextField(blank=True, verbose_name="Text článku")
+
+    content_panels = Page.content_panels + [
+        FieldPanel('text'),
+    ]
+
+    page_settings = Page.content_panels + [
+        FieldPanel('custom_title'),
+        ImageChooserPanel('image'),
+    ]
+
+    promote_panels = Page.promote_panels + [
+    ]
+
+    edit_handler = TabbedInterface([
+        ObjectList(page_settings, heading='Nastavení stránky'),
+        ObjectList(content_panels, heading='Obsah'),
+        ObjectList(promote_panels, heading='Propagovat'),
+    ])
+
+    class Meta:
+        verbose_name = "Detailní stránka článku"
+        verbose_name_plural = "Detailní stránky článků"

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load i18n static wagtailuserbar wagtailcore_tags wagtailimages_tags %}
+{% block content %}
+<body>
+
+
+  <i class="bi bi-list mobile-nav-toggle d-xl-none"></i>
+
+  {% include 'includes/header.html' %}
+
+  <main id="main">
+      <div class="container py-5">
+        {{ page.text|safe }}
+      </div>
+  </main>
+
+  <footer id="footer">
+    <div class="container">
+      <div class="copyright">
+        &copy; Copyright
+      </div>
+      <div class="credits">
+      </div>
+    </div>
+  </footer>
+{% endblock %}

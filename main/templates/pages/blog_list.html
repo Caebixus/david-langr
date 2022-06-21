@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load i18n static wagtailuserbar wagtailcore_tags wagtailimages_tags %}
+{% block content %}
+<body>
+
+
+  <i class="bi bi-list mobile-nav-toggle d-xl-none"></i>
+
+  {% include 'includes/header.html' %}
+
+  <main id="main">
+      <div class="container">
+
+        <div class="section-title py-5">
+          <h2>{{ page.title }}</h2>
+          <p>{{ page.custom_title }}</p>
+        </div>
+
+
+
+        <div>
+            {% for article in blog_list %}
+                {{ article.custom_title }}
+                <a href="{{ article.url }}">
+                    <button>
+                        Read more
+                    </button>
+                </a>
+            {% endfor %}
+        </div>
+
+
+      </div>
+
+
+  {% for block in page.content %}
+    {% with blockid=forloop.counter %}
+      {% include_block block %}
+    {% endwith %}
+  {% endfor %}
+
+
+  </main>
+
+  <footer id="footer">
+    <div class="container">
+      <div class="copyright">
+        &copy; Copyright
+      </div>
+      <div class="credits">
+      </div>
+    </div>
+  </footer>
+{% endblock %}

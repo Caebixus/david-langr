@@ -940,3 +940,7 @@ section {
 img {
   border-radius: 15px;
 }
+
+.custom-hr {
+  height: 3px !important;
+}
